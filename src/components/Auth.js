@@ -3,18 +3,29 @@ import {
     View,
     Text,
     StyleSheet,
-    Image
+    Image,
+    TouchableWithoutFeedback,
+    Keyboard
 } from "react-native";
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm'
 
 
 const Auth = () => {
+    const [isLogin, setIsLogin] = useState(true);
+    const changeForm = () => {
+        setIsLogin(!isLogin);
+    }
 
-    const [isLogin, setIsLogin] = useState(true)
     return (
-        <View style={styles.view}>
-            <Image style={styles.logo} source={require('../assets/logo.png')}/>
-            <Text>Auth</Text>
-        </View>
+        <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}>
+            <View style={styles.view}>
+                <Image style={styles.logo} source={require('../assets/logo.png')} />
+                {
+                    isLogin ? <LoginForm changeForm={changeForm} /> : <RegisterForm changeForm={changeForm} />
+                }
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 

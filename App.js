@@ -17,20 +17,16 @@ const App = () => {
       setUser(res);
     });
   }, []);
-
-
   if (user === undefined) return null;
-
   return (
     <>
-    <StatusBar barStyle="light-content"/>
+      <StatusBar barStyle="light-content" />
       <SafeAreaView style={styles.background}>
         {
           user ? <Text>Estas Logueado</Text> : <Auth />
         }
       </SafeAreaView>
     </>
-
   );
 };
 
