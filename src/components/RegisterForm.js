@@ -1,32 +1,77 @@
-import { StyleSheet, Text, TouchableOpacity, TextInput, View  } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, TextInput, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { validacion } from '../helpers/Validacion';
+import firebase from '../utils/firebase';
 
 const RegisterForm = (props) => {
     const { changeForm } = props;
-    const registrar = () => {
-        console.log('Registrar');
 
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        repetirPassword: ''
+    });
+    const [formError, setFormError] = useState({})
+
+    const registrar = () => {
+        let errors = {};
+        if (!formData.email || !formData.password || !formData.repetirPassword) {
+            if (!formData.email) errors.email = true;
+            if (!formData.password) errors.password = true;
+            if (!formData.repetirPassword) errors.repetirPassword = true;
+        } else if (!validacion(formData.email)) {
+            errors.email = true;
+        } else if (formData.password !== formData.repetirPassword) {
+            errors.password = true;
+            errors.repetirPassword = true;
+        } else if (formData.password.length < 6) {
+            errors.password = true;
+            errors.repetirPassword = true;
+        } else {
+            console.log('FORMULARIO CORRECTO');
+            firebase.auth().createUserWithEmailAndPassword(formData.email, formData.password)
+                .then((item) => {
+                    console.log(item);
+                }).catch(err => {
+                    console.log(err);
+                    setFormError({
+                        email: true,
+                        password: true,
+                        repetirPassword: true
+                    })
+                });
+        }
+        console.log('OCURRIO UN ERROR');
     }
 
     return (
         <>
             <TextInput
-                style={styles.input}
+                style={[styles.input, formError.email && styles.errorInput]}
                 placeholder='Correo electrónico'
                 placeholderTextColor='#969696'
                 keyboardType='visible-password'
+                onChange={(e) => {
+                    setFormData({ ...formData, email: e.nativeEvent.text })
+                }}
             />
             <TextInput
-                style={styles.input}
+                style={[styles.input, formError.password && styles.errorInput]}
                 placeholder='Contraseña'
                 placeholderTextColor='#969696'
                 secureTextEntry={true}
+                onChange={(e) => {
+                    setFormData({ ...formData, password: e.nativeEvent.text })
+                }}
             />
             <TextInput
-                style={styles.input}
+                style={[styles.input, formError.repetirPassword && styles.errorInput]}
                 placeholder='Repetir contraseña'
                 placeholderTextColor='#969696'
                 secureTextEntry={true}
+                onChange={(e) => {
+                    setFormData({ ...formData, repetirPassword: e.nativeEvent.text })
+                }}
             />
 
             <TouchableOpacity onPress={registrar}>
@@ -62,9 +107,12 @@ const styles = StyleSheet.create({
     login: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: 30,
-        alignItems:'center'
+        marginBottom: 50,
+        alignItems: 'center'
+    },
+    errorInput: {
+        borderColor: '#940C0C',
     }
-})
+});
 
-export default RegisterForm
+export default RegisterForm;
