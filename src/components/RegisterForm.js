@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, TextInput, View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { validacion } from '../helpers/Validacion';
-import firebase from '../utils/firebase';
+import {firebase} from '../utils/firebase';
 
 const RegisterForm = (props) => {
     const { changeForm } = props;

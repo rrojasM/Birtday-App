@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TextInput, View } from 'react-native';
-import firebase from '../utils/firebase';
+import { firebase } from '../utils/firebase';
 import { validacion } from '../helpers/Validacion';
 
 const LoginForm = (props) => {
